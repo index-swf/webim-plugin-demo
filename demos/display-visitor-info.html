@@ -1,0 +1,74 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,user-scalable=no">
+	<style>
+		body { background-color: #eee;color: #555; }
+		button, a { display: block;margin: 20px 0;background: #00CEB9;border: none;color: #fff;line-height: 40px;width: 200px;cursor: pointer;outline: none;text-align: center; }
+		button:hover, a:hover { box-shadow: 0 0 5px #33CEB9; }
+		button:active, a:active { background: #fff;color: #00CEB9; }
+		input { height: 40px;outline: none;width: 300px;text-align: center;font-size: 16px;color: #00CEB9; float: left;border: 1px solid #fff; }
+	</style>
+</head>
+
+<body>
+
+	<h1>Demo 集成用户体系 - 传递访客信息</h1>
+	<a target='_blank' href='http://docs.easemob.com/cs/300visitoraccess/20webplugin'>集成文档</a>
+	<br><br><br><br><br><br><br>
+
+
+
+	
+	<br><br><br><h1>测试</h1>
+	<div>
+		<input id='testvalue' type='text' placeholder='请输入您的tenantId'/>
+		<a id='test'>联系客服</a>
+	</div>
+	<br><br><br>
+	<p>注意事项：</p>
+	<ul>
+		<li>由于一些历史原因，按钮必须使用 a 标签</li>
+		<li>h5集成时，要使用开发版，本页与im.html不能跨域，二级域名也要一致</li>
+		<li>path，staticPath请严格按照示例格式配置，不能增加或省略任何部分</li>
+		<li>若非私有部署，domain 必须配置为'//kefu.easemob.com'</li>
+	</ul>
+
+
+<script>
+	var v = document.getElementById('testvalue');
+	v.value = localStorage.getItem('easemobtest') || '';
+	document.getElementById('test').onclick = function () {
+		if (/\d+/.test(v.value)) {
+			localStorage.setItem('easemobtest', v.value);
+			easemobim.bind({ tenantId: v.value.replace(/\s/g, '') })
+		}
+	};
+</script>
+<script>
+	window.easemobim = window.easemobim || {};
+
+	easemobim.config = {
+		domain: '//kefu.easemob.com',
+		path: '//index-swf.github.io/webim-plugin-demo',
+		staticPath: '//index-swf.github.io/webim-plugin-demo/static',
+		visitor: {
+			trueName: '黎小冷',
+			qq: '12345678',
+			phone: '18812341234',
+			companyName: '环信',
+			userNickname: '小冷',
+			description: '描述信息',
+			email: '123456@easemob.com'
+		},
+		// 隐藏默认的联系客服按钮，使用自定义按钮
+		hide: true
+	};
+</script>
+
+<script src='//index-swf.github.io/webim-plugin-demo/easemob.js'></script>
+</body>
+</html>
