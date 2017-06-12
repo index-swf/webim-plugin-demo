@@ -1,0 +1,128 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+	<meta name="format-detection" content="telephone=no">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,user-scalable=no">
+	<style>
+		body { background-color: #eee;color: #555; }
+		button, a { display: block;margin: 20px 0;background: #00CEB9;border: none;color: #fff;line-height: 40px;width: 200px;cursor: pointer;outline: none;text-align: center; }
+		button:hover, a:hover { box-shadow: 0 0 5px #33CEB9; }
+		button:active, a:active { background: #fff;color: #00CEB9; }
+		input { height: 40px;outline: none;width: 300px;text-align: center;font-size: 16px;color: #00CEB9; float: left;border: 1px solid #fff; }
+	</style>
+</head>
+
+<body>
+
+	<h1>Demo 发送用户轨迹消息</h1>
+	<a target='_blank' href='http://docs.easemob.com/cs/300visitoraccess/20webplugin'>网页插件集成文档</a>
+	<br>
+	<br>
+	<br>
+	<h1>测试</h1>
+	<div>
+		<!-- <input id='testvalue' type='text' placeholder='请输入您的tenantId'/> -->
+		<!-- <button onclick="test()">联系客服</button> -->
+		<button onclick="easemobim.bind()">联系客服并发送订单消息</button>
+		<button onclick="sendExtMessage()">聊天过程中发送订单消息</button>
+	</div>
+	<br><br><br>
+	<p>新版改变：</p>
+	<ul>
+		<li>移动端不再限制按钮必须使用 a 标签</li>
+		<li>移动端（H5）集成时，不需存在跨域问题，因此也无需使用开发版，可以直接引用标准版</li>
+		<li>移动端与pc端集成方式一致，不存在差异</li>
+		<li>由于并不依赖localStorage传递配置信息，故隐私模式也也能正常使用</li>
+		<li>可以支持在聊天过程中发送扩展消息，而非仅能在初始化时发送一次</li>
+	</ul>
+
+	<p>说明：</p>
+	<ul>
+		<li>当网页插件未初始化时，需要使用onReady回调发送扩展消息</li>
+		<li>初始化完成后可以随时调用 easemobim.sendExt 方法来发送扩展消息</li>
+		<li>本例程可以同时兼容移动端和pc端</li>
+		<li>本例使用onclick方式绑定按钮事件仅为了演示目的，实际可以使用 $.on addEventListener 等</li>
+		<li>若非私有部署，domain 必须配置为'//kefu.easemob.com'</li>
+	</ul>
+
+	<p>测试版说明：</p>
+	<ul>
+		<li>当前版本的网页插件还未上线，可能存在bug仅供测试</li>
+		<li>目前文档还未更新，集成方式以此为准</li>
+		<li>本例程使用的账号为沙箱账号，与线上账号不是一个体系</li>
+		<li>以下是测试账号信息：</li>
+		<li>domain: //sandbox.kefu.easemob.com</li>
+		<li>tenantId: 11885</li>
+		<li>login: sandbox.kefu.ease.com</li>
+		<li>username: test-track-msg@test.com</li>
+		<li>password: password!</li>
+	</ul>
+
+
+<script>
+	// var tenantIdInput = document.getElementById('testvalue');
+	// tenantIdInput.value = localStorage.getItem('easemobtest') || '';
+
+	function test(){
+		var tenantId = tenantIdInput.value;
+		tenantId = tenantId && tenantId.replace(/\s/g, '');
+
+		if (/\d+/.test(tenantId)) {
+			localStorage.setItem('easemobtest', tenantId);
+			easemobim.bind({tenantId: tenantId});
+		}
+	}
+
+	function sendExtMessage(){
+		// 初始化完成后可以随时调用 easemobim.sendExt 方法来发送扩展消息
+		easemobim.sendExt({
+			ext:{
+				"imageName": "mallImage3.png",
+				"type": "custom",
+				"msgtype": {
+					"track":{
+						"title":"我现在正在看：",
+						"price":"¥: 199.00",
+						"desc":"其他商品",
+						"img_url":"https://www.yourdomain.com/img/a.jpg",
+						"item_url":"https://www.yourdomain.com/item/a.html"
+					}
+				}
+			}
+		});
+	}
+</script>
+<script>
+	window.easemobim = window.easemobim || {};
+
+	easemobim.config = {
+		// 租户id, 这个是沙箱的账号
+		tenantId: '11885',
+		domain: '//sandbox.kefu.easemob.com',
+		// 首次初始化使用onReady 回调来发送扩展消息
+		onready: function () {
+			easemobim.sendExt({
+				ext:{
+					"imageName": "mallImage3.png",
+					"type": "custom",
+					"msgtype": {
+						"track":{
+							"title":"我正在看：",
+							"price":"¥: 235.00",
+							"desc":"女装小香风气质蕾丝假两件短袖",
+							"img_url":"https://www.yourdomain.com/img/a.jpg",
+							"item_url":"https://www.yourdomain.com/item/a.html"
+						}
+					}
+				}
+			});
+		},
+		hide: true
+	};
+</script>
+
+<script src='//sandbox.kefu.easemob.com/webim/easemob.js'></script>
+</body>
+</html>
