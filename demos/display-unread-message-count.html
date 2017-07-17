@@ -1,0 +1,112 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+	<meta name="format-detection" content="telephone=no">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,user-scalable=no">
+	<style>
+		body { background-color: #eee;color: #555; }
+		button, a { display: block;margin: 20px 0;background: #00CEB9;border: none;color: #fff;line-height: 40px;width: 200px;cursor: pointer;outline: none;text-align: center; }
+		button:hover, a:hover { box-shadow: 0 0 5px #33CEB9; }
+		button:active, a:active { background: #fff;color: #00CEB9; }
+		input { height: 40px;outline: none;width: 300px;text-align: center;font-size: 16px;color: #00CEB9; float: left;border: 1px solid #fff; }
+	</style>
+</head>
+
+<body>
+
+	<h1>Demo 显示消息未读数</h1>
+	<a target='_blank' href='http://docs.easemob.com/cs/300visitoraccess/20webplugin'>网页插件集成文档</a>
+	<br>
+	<br>
+	<br>
+	<h1>测试</h1>
+	<div>
+		<input id='testvalue' type='text' placeholder='请输入您的tenantId'/>
+		<button onclick="test()">联系客服</button>
+	</div>
+	<div>
+		<dl>
+			<dt>未读消息数: </dt>
+			<dd class="unread-message-count">0</dd>
+		</dl>
+	</div>
+	<br><br><br>
+
+	<p>说明：</p>
+	<ul>
+		<li>当聊天窗口最小化时，每来一条消息，则消息未读数自增1</li>
+		<li>当窗口由最小化状态变为打开状态时，清空消息未读数</li>
+		<li>本例程可以同时兼容移动端和pc端</li>
+		<li>本例中使用了文档中未公布的事件，不能保证以后的兼容性</li>
+		<li>如果要兼容IE8需要添加额外的兼容代码</li>
+		<li>若非私有部署，domain 必须配置为'//kefu.easemob.com'</li>
+	</ul>
+
+
+<script>
+	var tenantIdInput = document.getElementById('testvalue');
+	tenantIdInput.value = localStorage.getItem('easemobtest') || '';
+
+	function test(){
+		var tenantId = tenantIdInput.value;
+		tenantId = tenantId && tenantId.replace(/\s/g, '');
+
+		if (/\d+/.test(tenantId)) {
+			localStorage.setItem('easemobtest', tenantId);
+			easemobim.bind({tenantId: tenantId});
+		}
+	}
+</script>
+<script>
+(function(){
+	// 本例中聊天窗口默认是打开的
+	var isChatWindowOpen = true;
+	var unreadMessageCount = 0;
+	var resultDom = document.querySelector(".unread-message-count");
+
+	// 添加事件监听，用于获取聊天窗口是否最小化
+	// 如需兼容IE8 需要使用attachEvent，并且evt.data是JSON string 需要解析
+	// 这个是文档未公开的方式，不保证以后的版本都能兼容
+	window.addEventListener("message", function(evt){
+		var data = evt.data;
+		var eventName = data && data.event;
+
+		switch(eventName){
+		case "showChat":
+			isChatWindowOpen = true;
+			unreadMessageCount = 0;
+			_updateDom(unreadMessageCount);
+			break;
+		case "closeChat":
+			isChatWindowOpen = false;
+			break;
+		default:
+			break;
+		}
+	});
+
+	// 添加收消息回调
+	window.easemobim = window.easemobim || {};
+	window.easemobim.config = {
+		domain: "//kefu.easemob.com",
+		onmessage: _onMessageReceive
+	};
+
+	function _updateDom(count){
+		resultDom.innerText = count;
+	}
+
+	function _onMessageReceive(msg){
+		if(!isChatWindowOpen){
+			unreadMessageCount++;
+			_updateDom(unreadMessageCount);
+		}
+	}
+}());
+</script>
+
+<script src='//kefu.easemob.com/webim/easemob.js'></script>
+</body>
+</html>
