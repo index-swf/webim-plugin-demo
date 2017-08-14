@@ -37,7 +37,7 @@ const currentPath = path.dirname(__filename);
 const wwwRoot = path.resolve(currentPath, '..');
 
 var app = express();
-app.use('/webim', express.static(wwwRoot));
+app.use('/webim-plugin-demo', express.static(wwwRoot));
 
 
 if(program.target){
@@ -85,7 +85,7 @@ function printConfig() {
 	console.log([
 		'',
 		'kefu-webim WEB SERVER running @:'.rainbow,
-		(protocol + '//localhost:' + port + '/webim').cyan,
+		(protocol + '//localhost:' + port + '/webim-plugin-demo').cyan,
 		('target: ' + (program.target ? target : 'none')).yellow,
 		'',
 	].join('\n'));
