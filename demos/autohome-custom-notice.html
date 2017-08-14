@@ -1,0 +1,64 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+	<meta name="format-detection" content="telephone=no">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,user-scalable=no">
+	<style>
+		body { background-color: #eee;color: #555; }
+		button, a { display: block;margin: 20px 0;background: #00CEB9;border: none;color: #fff;line-height: 40px;width: 200px;cursor: pointer;outline: none;text-align: center; }
+		button:hover, a:hover { box-shadow: 0 0 5px #33CEB9; }
+		button:active, a:active { background: #fff;color: #00CEB9; }
+		input { height: 40px;outline: none;width: 300px;text-align: center;font-size: 16px;color: #00CEB9; float: left;border: 1px solid #fff; }
+	</style>
+</head>
+
+<body>
+
+	<h1>Demo 自定义公告栏内容</h1>
+	<a target='_blank' href='http://docs.easemob.com/cs/300visitoraccess/20webplugin'>网页插件集成文档</a>
+	<br>
+	<br>
+	<br>
+	<h1>测试</h1>
+	<div>
+		<input id='testvalue' type='text' placeholder='请输入您的tenantId'/>
+		<button onclick="test()">联系客服</button>
+	</div>
+	<br><br><br>
+
+	<p>说明：</p>
+	<ul>
+		<li><a href="https://github.com/easemob/kefu-webim/archive/dev_47.14_autohome.zip">代码下载</a></li>
+		<li>公告栏内容会从 "/webim-plugin-demo/gh-pages/autohome-custom-notice/notice.html" 获取，可以修改 /static/js/main.js 中这个地址</li>
+		<li>公告栏内容支持 HTML，详见示例 https://index-swf.github.io/webim-plugin-demo/gh-pages/autohome-custom-notice/notice.html</li>
+	</ul>
+
+
+<script>
+var tenantIdInput = document.getElementById('testvalue');
+tenantIdInput.value = localStorage.getItem('easemobtest') || '';
+
+function test(){
+	var tenantId = tenantIdInput.value;
+	tenantId = tenantId && tenantId.replace(/\s/g, '');
+
+	if (/\d+/.test(tenantId)) {
+		localStorage.setItem('easemobtest', tenantId);
+		easemobim.bind({tenantId: tenantId});
+	}
+}
+</script>
+<script>
+window.easemobim = window.easemobim || {};
+window.easemobim.config = {
+	domain: "//kefu.easemob.com",
+	path: "//index-swf.github.io/webim-plugin-demo/versions/autohome",
+	staticPath: "//index-swf.github.io/webim-plugin-demo/versions/autohome/static",
+};
+</script>
+
+<script src='//index-swf.github.io/webim-plugin-demo/versions/autohome/easemob.js?configId=b20b32cb-af25-4f18-aee6-329ee09c2d96'></script>
+</body>
+</html>
