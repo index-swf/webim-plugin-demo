@@ -98,10 +98,10 @@
 				break;
 			case _const.EVENTS.CACHEUSER:
 				// 缓存im username
-				if (msg.data.username) {
+				if (msg.data.value) {
 					utils.set(
 						'easemobim-im-username',
-						msg.data.username
+						msg.data.value
 					);
 				}
 				break;
